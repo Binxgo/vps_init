@@ -27,6 +27,7 @@ function install_bbr() {
 	bash -c 'echo "net.core.default_qdisc=fq" >> /etc/sysctl.conf'
 	bash -c 'echo "net.ipv4.tcp_congestion_control=bbr" >> /etc/sysctl.conf'
 	sysctl -p
+ 	sysctl net.ipv4.tcp_available_congestion_control 
 	lsmod | grep bbr
 	echo "完成启用 bbr"
 }
