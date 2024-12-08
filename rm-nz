@@ -1,0 +1,31 @@
+#!/bin/bash
+
+echo "开始卸载哪吒监控..."
+
+# 停止并禁用服务
+if systemctl is-active nezha-agent.service >/dev/null 2>&1; then
+    echo "停止 nezha-agent 服务..."
+    sudo systemctl stop nezha-agent.service
+    sudo systemctl disable nezha-agent.service
+fi
+
+# 删除服务文件
+if [ -f "/etc/systemd/system/nezha-agent.service" ]; then
+    echo "删除服务文件..."
+    sudo rm /etc/systemd/system/nezha-agent.service
+    sudo systemctl daemon-reload
+fi
+
+# 删除相关文件夹
+if [ -d "/opt/nezha" ]; then
+    echo "删除程序文件..."
+    sudo rm -rf /opt/nezha
+fi
+
+# 验证服务是否已删除
+echo "验证服务状态..."
+if ! systemctl list-units --type=service | grep nezha; then
+    echo "哪吒监控已成功卸载！"
+else
+    echo "警告：服务可能未完全删除，请手动检查。"
+fi
